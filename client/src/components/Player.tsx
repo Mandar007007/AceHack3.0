@@ -3,6 +3,7 @@ import React, { useEffect, useState , useRef} from "react";
 import ReactPlayer from "react-player";
 import { useSocket } from "../context/SocketProvider";
 import { useParams } from "react-router-dom";
+import { Tldraw } from "tldraw";
 
 export default function Player( ) {
   const socket = useSocket();
@@ -129,11 +130,20 @@ export default function Player( ) {
 			}
 		});
 
+    return () => {
+      socket.off("recv-url");
+      socket.off("recv-data");
+      socket.off("recv-state");
+    }; 
+
 
 
 
 
   } );
+
+
+ 
 
   return (
     <div>
@@ -164,6 +174,12 @@ export default function Player( ) {
           height="300px"
         />
       </div>
+
+
+
+      {/* <div style={{ position: 'fixed', inset: 0 }}>
+			<Tldraw />
+    </div> */}
     </div>
   );
 }
