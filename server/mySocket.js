@@ -67,7 +67,7 @@ io.on("connection", socket => {
 	// 	socket.broadcast.to(room).emit("recv-video-link", link);
 	// });
     socket.on('drawing', (data) => {
-        console.log(data.room)
+        // socket.broadcast.emit('drawing', data);
         io.to(data.room).emit('drawing', data);
     });
 

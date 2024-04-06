@@ -1,7 +1,8 @@
+import { useSocket } from "@/context/SocketProvider";
 import React, { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:8000/");
+// const socket = io("http://localhost:8000/");
 
 export default function Canvas({room}) {
     const [isDrawing, setIsDrawing] = useState(false);
@@ -12,6 +13,7 @@ export default function Canvas({room}) {
     const timeout = useRef(null);
     const [cursor, setCursor] = useState("default");
     const socketRef = useRef(null);
+    socketRef.current = useSocket();
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -21,9 +23,12 @@ export default function Canvas({room}) {
         canvas.height = window.innerHeight;
         canvas.width = window.innerWidth;
 
-        socketRef.current = io("http://localhost:8000/");
+        // socketRef.current = io("http://localhost:8000/");
 
         // Listen for drawing events from other clients
+
+
+
         socketRef.current.on("drawing", async (data) => {
             console.log("drawing event litsened by client");
             // draw(data);
@@ -80,7 +85,7 @@ export default function Canvas({room}) {
             // console.log("emmiting event of drawing")
         );
 
-        
+
 
 
     };
