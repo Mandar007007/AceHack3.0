@@ -3,6 +3,7 @@ import React, { useEffect, useState , useRef} from "react";
 import ReactPlayer from "react-player";
 import { useSocket } from "../context/SocketProvider";
 import { useParams } from "react-router-dom";
+import Board from "./Board";
 
 export default function Player( ) {
   const socket = useSocket();
@@ -164,6 +165,7 @@ export default function Player( ) {
           height="300px"
         />
       </div>
+      <Board room = {room}/>
     </div>
   );
 }

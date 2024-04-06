@@ -4,6 +4,7 @@ import ReactPlayer from 'react-player';
 import Player from './components/Player';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
+import Board from './components/Board';
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
 
         <Route path="/"  element={<Home/>} />
         <Route path="/room/:roomId"  element={ <Player/>} />
-
+        <Route path="/board" element= {<Board/>}></Route>
         </Routes>
 
 
