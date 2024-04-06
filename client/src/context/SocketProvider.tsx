@@ -15,7 +15,7 @@ export const useSocket = () => {
 
 
 export const SocketProvider = ( {children } : SocketProviderProps ) => {
-    const socket = useMemo(() => io.connect('http://localhost:8000'), []);
+    const socket = useMemo(() => io.connect('http://localhost:3000'), []);
 
     return (
         <SocketContext.Provider value={socket as unknown as null}>

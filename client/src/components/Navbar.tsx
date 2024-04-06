@@ -16,13 +16,14 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
+import { useSelector } from "react-redux"
 // import { useSelector } from "react-redux"
 
 
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Create Study Rooms",
-    href: "/tournaments",
+    href: "/create-room",
     description:
       " ",
   },
@@ -33,7 +34,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function Navbar() {
 
-//   const user = useSelector((state : any) => state.user.user) || null;
+  const user = useSelector((state : any) => state.user.user) || null;
   
  
 
@@ -77,10 +78,10 @@ export function Navbar() {
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-      {/* {user? <Button className="ml-auto " variant={"outline"}>{user.username}</Button> : ""}
+      {user? <Button className="ml-auto " variant={"outline"}>{user.name}</Button> : ""}
       { !user    &&
         <Button className="ml-auto"><Link to="/login">Login</Link></Button>
-      } */}
+      }
 
     </div>
   )
