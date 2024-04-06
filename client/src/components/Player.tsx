@@ -130,11 +130,20 @@ export default function Player( ) {
 			}
 		});
 
+    return () => {
+      socket.off("recv-url");
+      socket.off("recv-data");
+      socket.off("recv-state");
+    }; 
+
 
 
 
 
   } );
+
+
+ 
 
   return (
     <div>

@@ -5,6 +5,7 @@ import Player from './components/Player';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import Board from './components/Board';
+import { Navbar } from './components/Navbar';
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
   return (
     <>
       <Router>
+        <Navbar/>
         <Routes>
 
         <Route path="/"  element={<Home/>} />
