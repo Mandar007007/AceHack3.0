@@ -4,7 +4,7 @@ const { sendEmail } = require('../middlewares/sendMail');
 
 exports.register = async (req, res) => {
     try {
-      const { name, email, password, contact, address } = req.body;
+      const { name, email, password, contact } = req.body;
   
         const public_id = "sample id"
         const url = ""
@@ -33,7 +33,6 @@ exports.register = async (req, res) => {
           email,
           password,
           contact,
-          address,
           avtar: { url, public_id },
         });
         const otp = await user.generateOTP();
@@ -167,7 +166,7 @@ exports.register = async (req, res) => {
         });
       }
   
-      const isMatch = await user.matchPassword(password);
+      const isMatch = user.password === password;
   
       if (!isMatch) {
         return res.status(404).json({

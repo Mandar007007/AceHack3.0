@@ -19,10 +19,6 @@ const userSchema = new mongoose.Schema({
     contact:{
         typeof:String,
     },
-    address:{
-        type:String,
-        required:[true,'Please enter Address']
-    },
     avtar: {
         public_id: String,
         url: String,

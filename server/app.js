@@ -18,13 +18,15 @@ const server = http.createServer(app)
 
 io = new Server(server,{
     cors:{
-        origin: 'https://localhost:5173',
+        origin: '*',
         methods: ['GET', 'POST'],
     }
 })
 
 //routes
 const User = require('./routes/User')
+const Room = require('./routes/Room')
 app.use('/api/v1',User)
+app.use('/api/v1',Room)
 
 module.exports = server
