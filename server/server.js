@@ -4,6 +4,6 @@ const {connectDatabase} = require('./config/dbconnect');
 require("dotenv").config({path:'./config/config.env'})
 connectDatabase();
 
-server.listen(3000,() => {
-    console.log('listening on port 3000')
+server.listen(8000,() => {
+    console.log('listening on port 8000')
 })

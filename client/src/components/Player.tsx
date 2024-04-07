@@ -3,6 +3,10 @@ import React, { useEffect, useState , useRef} from "react";
 import ReactPlayer from "react-player";
 import { useSocket } from "../context/SocketProvider";
 import { useParams } from "react-router-dom";
+import { Stream } from "stream";
+
+const RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+const RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
 
 export default function Player( ) {
   const socket = useSocket();
@@ -13,7 +17,12 @@ export default function Player( ) {
 
   const room = useParams().roomId;
 
-
+  const localVideoRef = useRef();
+  const remoteVideoRef = useRef();
+  const [localStream, setLocalStream] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(null);
+  const [isCalling, setIsCalling] = useState(false);
+  const [peerConnection, setPeerConnection] = useState(null);
 
 
   // const [room, setRoom] = useState("");
@@ -102,7 +111,11 @@ export default function Player( ) {
 
     // localStorage.setItem("last-room", room);
 		// localStorage.setItem("last-url", url);
-
+    // Handle incoming stream from other users
+    socket.on("user:joined", ({ email,id }) => {
+    
+      handleUserJoined(id);
+    });
 
     socket.on("recv-url", (url: any) => {
     
@@ -129,11 +142,50 @@ export default function Player( ) {
 			}
 		});
 
-
-
-
-
   } );
+
+  const handleUserJoined = (id) => {
+    // Create a peer connection with the remote user
+    const peerConnection = new RTCPeerConnection();
+    
+    // Add local stream to peer connection
+    localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+
+    // Set up event handlers for peer connection
+    peerConnection.ontrack = handleTrackEvent;
+    peerConnection.onicecandidate = handleICECandidateEvent;
+
+    // Create offer and set local description
+    peerConnection.createOffer()
+    .then((offer) => {
+      
+      return peerConnection.setLocalDescription(offer);
+    })
+    .then(() => {
+      // Send offer to the remote user
+      socket.emit("offer", { id, offer: peerConnection.localDescription });
+    })
+    .catch((error) => {
+      alert(1)
+      console.error("Error creating offer:", error);
+    });
+
+    // Handle incoming ice candidates from the remote user
+    socket.on("ice-candidate", ({ id, candidate }) => {
+      if (id === socket.id) return; // Ignore ice candidates from self
+      peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    });
+};
+  useEffect(()=>{
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    }).then(Stream => {
+      setLocalStream(Stream);
+      localVideoRef.current.srcObject = Stream
+      
+    })
+  })
 
   return (
     <div>
@@ -163,6 +215,10 @@ export default function Player( ) {
           width="500px"
           height="300px"
         />
+      </div>
+      <div className="videoDiv">
+    <video id="localVideo" ref={localVideoRef} style={{"height":100,"width":100}}autoPlay></video>
+    <video id="remoteVideo" ref={remoteVideoRef} autoPlay></video>
       </div>
     </div>
   );
