@@ -1,35 +1,24 @@
-const express = require('express')
-const http = require('http')
-const app = express()
-const {Server} = require('socket.io')
-const cors = require('cors')
-const superheroes = require('superheroes')
+const express = require("express");
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const cors = require("cors");
+const superheroes = require("superheroes");
 
-const cookieParser = require('cookie-parser')
+const io = new Server(server, {
+	cors: {
+		origin: "http://localhost:5173",
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+		credentials: true,
+	},
+});
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
-}))
-
-const server = http.createServer(app)
-
-io = new Server(server,{
-    cors:{
-        origin: '*',
-        methods: ['GET', 'POST'],
-    },
-    
-})
 
 const emailToSocketIdMap = new Map();
 const socketidToEmailMap = new Map();
 
 io.on("connection", socket => {
-    
 	const username = superheroes.random();
 	const users = {};
 	users[socket.id] = username;
@@ -74,34 +63,34 @@ io.on("connection", socket => {
 		io.to(room).emit("recv-rate", rate);
 	});
 
+	// socket.on("send-video-link", (link, room) => {
+	// 	socket.broadcast.to(room).emit("recv-video-link", link);
+	// });
+    socket.on('drawing', (data) => {
+        // socket.broadcast.emit('drawing', data);
+        io.to(data.room).emit('drawing', data);
+    });
+
 	socket.on("join-room", data => {
 
 		const { email , room } = data;
 		socket.join(room);
+		// console.log(User ${users[socket.id]} joined ${room});
+		// const clients = io.sockets.adapter.rooms.get(room);
+		// if (clients.size > 1) {
+		// 	console.log(Users in ${room}: ${clients.size});
+		// 	console.log(clients);
+		// 	console.log("\n");
+		// }
 
 		emailToSocketIdMap.set(email, socket.id);
     	socketidToEmailMap.set(socket.id, email);
 
-		console.log(`${email} joined ${room}` )
+		console.log(`${email} joined ${room} `)
     	io.to(room).emit("user:joined", { email, id: socket.id });
-        
+
 		io.to(socket.id).emit("join-room", data);
 	});
-
-    socket.on('offer', ({ id, offer }) => {
-        // Send the offer to the specified user
-        socket.to(id).emit('offer', { id: socket.id, offer });
-      });
-    
-      socket.on('answer', ({ id, answer }) => {
-        // Send the answer to the specified user
-        socket.to(id).emit('answer', { id: socket.id, answer });
-      });
-    
-      socket.on('ice-candidate', ({ id, candidate }) => {
-        // Send the ICE candidate to the specified user
-        socket.to(id).emit('ice-candidate', { id: socket.id, candidate });
-      });
 
 	socket.on("leave-room", room => {
 		socket.leave(room);
@@ -109,10 +98,6 @@ io.on("connection", socket => {
 	});
 });
 
-//routes
-const User = require('./routes/User')
-const Room = require('./routes/Room')
-app.use('/api/v1',User)
-app.use('/api/v1',Room)
-
-module.exports = server
+server.listen(process.env.PORT || 8000, () => {
+	console.log("Server is running on port 8000");
+});

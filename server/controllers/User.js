@@ -4,7 +4,8 @@ const { sendEmail } = require('../middlewares/sendMail');
 
 exports.register = async (req, res) => {
     try {
-      const { name, email, password, contact, address } = req.body;
+      const { name, email, password, contact } = req.body;
+      console.log(password)
   
         const public_id = "sample id"
         const url = ""
@@ -33,7 +34,6 @@ exports.register = async (req, res) => {
           email,
           password,
           contact,
-          address,
           avtar: { url, public_id },
         });
         const otp = await user.generateOTP();
@@ -130,27 +130,7 @@ exports.register = async (req, res) => {
     try {
       const { email, password, isGoogle } = req.body;
   
-      if (isGoogle === true) {
-        const user = await User.findOne({ email: email });
-        console.log("User", user);
-        if (!user) {
-          return res.status(404).json({
-            success: false,
-            message: "User not found",
-          });
-        }
-        const token = await user.generateToken();
-        return res
-          .cookie("token", token, {
-            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-            httpOnly: true,
-          })
-          .status(200)
-          .json({
-            success: true,
-            user,
-          });
-      }
+
       if (!email || !password) {
         return res.status(400).json({
           success: false,
@@ -159,6 +139,7 @@ exports.register = async (req, res) => {
       }
   
       const user = await User.findOne({ email: email }).select("+password");
+      
   
       if (!user || !user.isVerified) {
         return res.status(404).json({
@@ -167,7 +148,7 @@ exports.register = async (req, res) => {
         });
       }
   
-      const isMatch = await user.matchPassword(password);
+      const isMatch = user.password === password;
   
       if (!isMatch) {
         return res.status(404).json({
