@@ -19,7 +19,7 @@ export default function Room() {
   const navigate = useNavigate();
   
   const user = useSelector((state: any) => state.user.user) || null;
-  const email = user?.email
+  const email = user?.email;
   
 
     if(!socket) {
@@ -65,7 +65,7 @@ export default function Room() {
         const newRoom = makeroom(10);
         setRoom(newRoom)
         console.log("email", email);
-        console.log("room", room);
+        console.log("room", newRoom);
 
 
 
@@ -74,8 +74,9 @@ export default function Room() {
           localStorage.setItem("last-room", room);
           
           const room_code = newRoom
+          const ownerId = user?._id;
           try{
-            const res = await axios.post("http://localhost:3000/api/v1/room" , { description, user , room_code } ,
+            const res = await axios.post("http://localhost:3000/api/v1/room" , { description, ownerId , room_code } ,
             {
               withCredentials: true
             })
@@ -101,15 +102,40 @@ export default function Room() {
 
 
     const handleSubmitForm = useCallback(
-        (e : any) => {
+        async (e : any) => {
           e.preventDefault();
-          setEmail(user?.email);
+          
           console.log("email", email);
           console.log("room", room);
+
+          const userId = user?._id
+          const room_code = room
+
+        
+
+          
+
+
           if( room !== ""  &&  email !== "" ) {
             localStorage.setItem("last-room", room);
-            socket.emit("join-room", { email , room });
-            navigate(`/room/${room}`);
+
+            try{
+              // const res = await axios.post("http://localhost:3000/api/v1/adduser" , {  userId , room_code } ,
+              // {
+              //   withCredentials: true
+              // })
+  
+              toast.success("Room joined")
+              socket.emit("join-room", { email , room });
+              navigate(`/room/${room}`);
+            }
+  
+            catch(err){
+              console.log(err)
+              toast.error("Something went wrong")
+            }
+            
+            
           } else {
             alert("Please enter a room name");
           }

@@ -30,8 +30,14 @@ import toast from "react-hot-toast";
 
 const components: { title: string; href: string; description: string }[] = [
   {
-    title: "Create Study Rooms",
+    title: "Study Rooms",
     href: "/room",
+    description: "",
+  },
+
+  {
+    title: "Previous Rooms",
+    href: "/myrooms",
     description: " ",
   },
 ];

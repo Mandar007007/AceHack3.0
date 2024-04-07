@@ -26,7 +26,7 @@ export default function Login() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await axios.post("http://localhost:8000/api/v1/login"  , loginForm , 
+    const response = await axios.post("http://localhost:3000/api/v1/login"  , loginForm , 
       {
         withCredentials: true
       }

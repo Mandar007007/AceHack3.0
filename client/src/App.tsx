@@ -10,11 +10,13 @@ import Register from './components/auth/Register';
 import Home from './components/Home';
 import Room from './components/Room';
 import axios  from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import MyRooms from './components/MyRooms';
 function App() {
 
   const dispatch = useDispatch();
+ 
 
 
   const loadUser = async () => {
@@ -63,6 +65,8 @@ function App() {
         <Route path="/room/:roomId"  element={ <Player/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>  }/>
+        <Route path="/myrooms" element={<MyRooms/>  }/>
+        
         {/* <Route path="/board" element= {<Board/>}></Route> */}
         </Routes>
 

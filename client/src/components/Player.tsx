@@ -22,10 +22,6 @@ import {
 import ReactPlayer from "react-player";
 import { useSocket } from "../context/SocketProvider";
 import { useParams } from "react-router-dom";
-import { Stream } from "stream";
-
-const RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-const RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Board from "./Board";
@@ -44,13 +40,6 @@ export default function Player() {
 
   const room = useParams().roomId;
 
-
-  const localVideoRef = useRef();
-  const remoteVideoRef = useRef();
-  const [localStream, setLocalStream] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
-  const [isCalling, setIsCalling] = useState(false);
-  const [peerConnection, setPeerConnection] = useState(null);
   const [data, setData] = useState("");
 
   const [subject, setSubject] = useState("");
@@ -157,13 +146,7 @@ export default function Player() {
 
   useEffect(() => {
     // localStorage.setItem("last-room", room);
-		// localStorage.setItem("last-url", url);
-    // Handle incoming stream from other users
-    socket.on("user:joined", ({ email,id }) => {
-    
-      handleUserJoined(id);
-    });
-
+    // localStorage.setItem("last-url", url);
 
     socket.on("recv-url", (url: any) => {
       // localStorage.setItem("last-url", url);
@@ -187,50 +170,6 @@ export default function Player() {
       }
     });
 
-  } );
-
-  const handleUserJoined = (id) => {
-    // Create a peer connection with the remote user
-    const peerConnection = new RTCPeerConnection();
-    
-    // Add local stream to peer connection
-    localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
-
-    // Set up event handlers for peer connection
-    peerConnection.ontrack = handleTrackEvent;
-    peerConnection.onicecandidate = handleICECandidateEvent;
-
-    // Create offer and set local description
-    peerConnection.createOffer()
-    .then((offer) => {
-      
-      return peerConnection.setLocalDescription(offer);
-    })
-    .then(() => {
-      // Send offer to the remote user
-      socket.emit("offer", { id, offer: peerConnection.localDescription });
-    })
-    .catch((error) => {
-      alert(1)
-      console.error("Error creating offer:", error);
-    });
-
-    // Handle incoming ice candidates from the remote user
-    socket.on("ice-candidate", ({ id, candidate }) => {
-      if (id === socket.id) return; // Ignore ice candidates from self
-      peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    });
-};
-  useEffect(()=>{
-    navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    }).then(Stream => {
-      setLocalStream(Stream);
-      localVideoRef.current.srcObject = Stream
-      
-    })
-  })
     return () => {
       socket.off("recv-url");
       socket.off("recv-data");
@@ -249,6 +188,8 @@ export default function Player() {
         pdf.save('physics_notes.pdf');
       });
   }
+
+  
 
   return (
     <div>
@@ -294,11 +235,6 @@ export default function Player() {
         
         />
       </div>
-      <div className="videoDiv">
-    <video id="localVideo" ref={localVideoRef} style={{"height":100,"width":100}}autoPlay></video>
-    <video id="remoteVideo" ref={remoteVideoRef} autoPlay></video>
-      </div>
-
 
       {/* <Board /> */}
       {/* <div className=" h-[400px] mt-10">
