@@ -39,12 +39,12 @@ export default function Login() {
 
         dispatch({
             type: 'SET_USER',
-            payload: response.data
+            payload: response.data.user
         })
 
-        console.log(response.data)
-        console.log(user)
-        console.log(isAuthenticated)
+        // console.log(response.data)
+        // console.log(user)
+        // console.log(isAuthenticated)
         navigate('/')
 
     }

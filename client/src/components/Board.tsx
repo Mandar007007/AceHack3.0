@@ -122,7 +122,7 @@ export default function Canvas({room}) {
     };
 
     return (
-        <>
+        <div className="bg-white w-[600px] h-[400px] rounded-lg m-10 text-black">
             <div className="canvas-btn">
                 <button onClick={getPen} className="btn-width">
                     Pencil
@@ -166,6 +166,6 @@ export default function Canvas({room}) {
                 onMouseMove={draw}
                 ref={canvasRef}
             />
-        </>
+        </div>
     );
 }

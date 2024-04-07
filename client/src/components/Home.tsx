@@ -1,7 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSocket } from "../context/SocketProvider";
-
+import React from 'react'
 
 export default function Home() {
     const [email, setEmail] = useState("");
@@ -71,39 +68,19 @@ export default function Home() {
     
 
 
-
-
   return (
     <div>
-        
-        <h1>This is home page</h1>
 
+        <div className='flex flex-col space-y-10 justify-center items-center'>
+          <img src="hero2.png" alt="" className='h-[320px] rounded-xl' />
 
-
-        <form onSubmit={handleSubmitForm}>
-        <label htmlFor="email">Email ID</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br />
-        <label htmlFor="room">Room ID</label>
-        <input
-          type="text"
-          id="room"
-          value={room}
-          onChange={(e) => setRoom(e.target.value)}
-        />
-        <br />
+          <div className='text-center'>
+            <h1 className='text-4xl'>GyaanGanga</h1>
+            <p className='text-md mt-3'>Learn Together, Thrive Together!</p>
+          </div>
 
         
-        <button>Join</button>
-      </form>
-      <button onClick={makeroom}>Create Room</button>
-
-
+        </div>
     </div>
   )
 }
