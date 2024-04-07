@@ -4,6 +4,10 @@ const {connectDatabase} = require('./config/dbconnect');
 require("dotenv").config({path:'./config/config.env'})
 connectDatabase();
 
+<<<<<<< HEAD
+server.listen(8000,() => {
+    console.log('listening on port 8000')
+=======
 
 const emailToSocketIdMap = new Map();
 const socketidToEmailMap = new Map();
@@ -90,4 +94,5 @@ io.on("connection", socket => {
 
 server.listen(3000,() => {
     console.log('listening on port 3000')
+>>>>>>> 9b2a4648ce89b2c159f66710e1b913b0044619c3
 })

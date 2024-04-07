@@ -18,7 +18,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const user = useSelector((state : any) => state.user.user) || null;
+  const user = useSelector((state : any) => state.user.user);
 
   const isAuthenticated = useSelector((state : any) => state.user.isAuthenticated) || false;
   
@@ -26,13 +26,13 @@ export default function Login() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await axios.post("http://localhost:3000/api/v1/login"  , loginForm , 
+    const response = await axios.post("http://localhost:8000/api/v1/login"  , loginForm , 
       {
         withCredentials: true
       }
     
     );
-
+    console.log(response)
     if(response.data){
         toast.success('Login Successfull')
         // console.log(response.data)

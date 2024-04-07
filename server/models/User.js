@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         minlength: [6, "Min 6 Chars"],
-        select: false
+        select: true
     },
     contact:{
         typeof:String,

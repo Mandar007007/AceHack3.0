@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken")
 exports.register = async (req, res) => {
     try {
       const { name, email, password, contact } = req.body;
+      console.log(password)
   
         const public_id = "sample id"
         const url = ""
@@ -130,27 +131,7 @@ exports.register = async (req, res) => {
     try {
       const { email, password, isGoogle } = req.body;
   
-      if (isGoogle === true) {
-        const user = await User.findOne({ email: email });
-        console.log("User", user);
-        if (!user) {
-          return res.status(404).json({
-            success: false,
-            message: "User not found",
-          });
-        }
-        const token = await user.generateToken();
-        return res
-          .cookie("token", token, {
-            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-            httpOnly: true,
-          })
-          .status(200)
-          .json({
-            success: true,
-            user,
-          });
-      }
+
       if (!email || !password) {
         return res.status(400).json({
           success: false,
@@ -159,6 +140,7 @@ exports.register = async (req, res) => {
       }
   
       const user = await User.findOne({ email: email }).select("+password");
+      
   
       if (!user || !user.isVerified) {
         return res.status(404).json({
