@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/User');
 const { sendEmail } = require('../middlewares/sendMail');
+const jwt = require("jsonwebtoken") 
 
 exports.register = async (req, res) => {
     try {

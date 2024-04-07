@@ -28,3 +28,9 @@
 .mouse-state {
     cursor: none;
 }
+
+
+@font-face {
+    font-family: 'secondary';
+    src: url("/public/font/Quicksand-Medium.ttf");
+  }

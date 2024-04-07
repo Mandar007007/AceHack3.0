@@ -16,6 +16,11 @@ const roomSchema = new mongoose.Schema({
         default : Date.now
     },
 
+    room_code : {
+        type : String ,
+        required : true
+    },
+
     users : [
         {
             type : mongoose.Schema.ObjectId,

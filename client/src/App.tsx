@@ -1,22 +1,56 @@
 import './App.css'
-import { io } from 'socket.io-client'
-import ReactPlayer from 'react-player';
 import Player from './components/Player';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
+
 // import Board from './components/Board';
 import { Navbar } from './components/Navbar';
 import Login from './components/auth/Login';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import Register from './components/auth/Register';
-
+import Home from './components/Home';
+import Room from './components/Room';
+import axios  from 'axios';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 function App() {
+
+  const dispatch = useDispatch();
+
+
+  const loadUser = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/api/v1/loaduser", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      // console.log(data)
+
+      if (data.user) {
+        dispatch({ type: "SET_USER", payload: data.user });
+        // toggleLogin();
+        
+      } else {
+        dispatch({ type: "CLEAR_USER" });
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
+  useEffect(()=>{
+
+    loadUser();
+  },[])
 
   
   
 
   return (
-    <>
+    <div className='font-secondary'>
       <Router>
         <Toaster/>
         <Navbar/>
@@ -24,6 +58,8 @@ function App() {
         <Routes>
 
         <Route path="/"  element={<Home/>} />
+        <Route path="/room"  element={<Room/>} />
+
         <Route path="/room/:roomId"  element={ <Player/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>  }/>
@@ -42,7 +78,7 @@ function App() {
 
 
 
-    </>
+    </div>
   )
 }
 

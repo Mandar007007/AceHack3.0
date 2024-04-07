@@ -2,10 +2,11 @@ const Room = require("../models/Room")
 
 exports.createRoom = async (req, res) => {
     try {
-        const { description } = req.body;
+        const { description , room_code} = req.body;
         const room = await Room.create({
             ownerId: req.user._id,
-            description
+            description,
+            room_code
         })
         res.status(200).json({
             success: true,
